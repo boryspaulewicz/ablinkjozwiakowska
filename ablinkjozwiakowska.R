@@ -6,7 +6,7 @@ TASK.NAME <<- 'ablinkjozwiakowska'
 
 FIXATION.TIME = 1000
 POST.FIXATION.TIME = 1000
-PRESENTATION.TIME = 120
+PRESENTATION.TIME = 500 ## 120
 MAX.REACTION.TIME = 3000
 ISI = 16
 NOF.ITEMS = 15
@@ -34,29 +34,33 @@ load.jpgs = function(folder){
 }
 
 flowers = load.jpgs('./flowers/')
+mushrooms = load.jpgs('./mushrooms/')
 faces = load.jpgs('./faces180/')
 fearful = load.jpgs('./fearful/')
 happy = load.jpgs('./happy/')
 neutral = load.jpgs('./neutral/')
 ## Wszystkie w jednej liście do łatwiejszego wybierania
-pictures = list(flowers = flowers, faces = faces, fearful = fearful, happy = happy, neutral = neutral)
+pictures = list(flowers = flowers, mushrooms = mushrooms, faces = faces, fearful = fearful, happy = happy, neutral = neutral)
 
 FX = fixation(WINDOW, size = .02)
 
-trial.code = function(trial, t1type = sample(c('mushroom', 'flower'), 1), t1pos = sample(c(3, 6, 8), 1),
+trial.code = function(trial, t1type = sample(c('mushrooms', 'flowers'), 1), t1pos = sample(c(3, 6, 8), 1),
     t2type = sample(c('neutral', 'happy', 'fearful'), 1), t2lag = sample(c(1, 3, 5, 7), 1), feedback = 0){
+    t1type = as.character(t1type)
+    t2type = as.character(t2type)
     ## Kod specyficzny dla zadania
     ## ...
     ## Szablon
     t2pos = t1pos + t2lag
     ## Mieszamy indeksy obrazków
     flowers.i = sample(1:length(flowers))
+    mushrooms.i = sample(1:length(mushrooms))
     faces.i = sample(1:length(faces))
     happy.i = sample(1:length(happy))
     neutral.i = sample(1:length(neutral))
     fearful.i = sample(1:length(fearful))
     ## Wszystkie indeksy losowe w jednej liście, żeby było łatwiej wybierać
-    indices = list(flowers = flowers.i, faces = faces.i, happy = happy.i, neutral = neutral.i, fearful = fearful.i)
+    indices = list(flowers = flowers.i, mushrooms = mushrooms.i, faces = faces.i, happy = happy.i, neutral = neutral.i, fearful = fearful.i)
     if(trial == 1){
         state = 'press-space'
     }else{ state = 'show-fixation' }
@@ -125,16 +129,6 @@ trial.code = function(trial, t1type = sample(c('mushroom', 'flower'), 1), t1pos 
                     state = 'measure-reaction'
                 }
             }
-        ## }, 'show-redgreen' = {
-        ##     WINDOW$clear(c(.5, .5, .5))
-        ##     TXT$set.string("CZERWONA     ZIELONA")
-        ##     center(TXT, WINDOW)
-        ##     WINDOW$draw(TXT)
-        ##     WINDOW$display()
-        ##     redgreen.onset = CLOCK$time
-        ##     CORRECT.KEY <<- c(red = Key.Left, green = Key.Right)[t2type]
-        ##     ACC <<- RT <<- NULL
-        ##     state = 'measure-reaction'
         }, 'measure-reaction' = {
             WINDOW$set.visible(F)
             choice1 = gui.choose.item(c('KWIAT', 'GRZYB'))
@@ -184,7 +178,7 @@ gui.show.instruction("Teraz rozpocznie się zadanie rozpoznawania zdjęć przeds
 
 Po zakończeniu prezentacji zdjęć pojawi się okno pozwalające zaznaczyć, czy w serii zdjęć pojawił się kwiat, czy grzyb. Następnie pojawi się okno pozwalające zaznaczyć, jaka emocja była prezentowana na ekranie.")
 
-run.trials(trial.code, record.session = F, expand.grid(t1type = c('mushroom', 'flower'), t1pos = c(3, 6, 8),
+run.trials(trial.code, record.session = F, expand.grid(t1type = c('mushrooms', 'flowers'), t1pos = c(3, 6, 8),
     t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)), condition = 'default')
 
 if(!interactive())quit("no")
