@@ -10,6 +10,7 @@ PRESENTATION.TIME = 120
 MAX.REACTION.TIME = 3000
 ISI = 16
 NOF.ITEMS = 15
+BLOCK.LENGTH = 24
 KEYS <<- c(Key.Left, Key.Right)
 
 ## WINDOW$set.visible(T)
@@ -63,6 +64,8 @@ trial.code = function(trial, t1type = sample(c('mushrooms', 'flowers'), 1), t1po
     indices = list(flowers = flowers.i, mushrooms = mushrooms.i, faces = faces.i, happy = happy.i, neutral = neutral.i, fearful = fearful.i)
     if(trial == 1){
         state = 'press-space'
+    }else if((trial %% BLOCK.LENGTH) == 0){
+        state = 'break'
     }else{ state = 'show-fixation' }
     if(WINDOW$is.open())process.inputs()
     start = CLOCK$time
@@ -76,6 +79,14 @@ trial.code = function(trial, t1type = sample(c('mushrooms', 'flowers'), 1), t1po
             center.win(TXT)
             WINDOW$clear(c(0, 0, 0))
             WINDOW$draw(TXT)
+            WINDOW$display()
+            if(KEY.RELEASED[Key.Space + 1] > start){
+                state = 'show-fixation'
+            }
+        }, 'break' = {
+            WINDOW$clear(c(.5, .5, .5))
+            TXT$set.string("Krótka przerwa - odpocznij. Aby kontynuować, naciśnij spację")
+            WINDOW$draw(center.win(TXT))
             WINDOW$display()
             if(KEY.RELEASED[Key.Space + 1] > start){
                 state = 'show-fixation'
@@ -176,9 +187,18 @@ gui.user.data()
 
 gui.show.instruction("Teraz rozpocznie się zadanie rozpoznawania zdjęć przedstawiających kwiaty lub grzyby i zdjęć, na których widać twarz wyrażającą radość, strach lub twarz neutralną. Zadanie to składa się z serii prób, w trakcie których na ekranie komputera prezentowane są szybko, jedno po drugim, różne obrazy. I tak dalej...
 
-Po zakończeniu prezentacji zdjęć pojawi się okno pozwalające zaznaczyć, czy w serii zdjęć pojawił się kwiat, czy grzyb. Następnie pojawi się okno pozwalające zaznaczyć, jaka emocja była prezentowana na ekranie.")
+Po zakończeniu prezentacji zdjęć pojawi się okno pozwalające zaznaczyć, czy w serii zdjęć pojawił się kwiat, czy grzyb. Następnie pojawi się okno pozwalające zaznaczyć, jaka emocja była prezentowana na ekranie.
+
+Najpierw będzie można wykonać zadanie w wersji treningowej. Ten etap będzie krótki i jego celem będzie zapoznanie się z przebiegiem zadania.")
 
 run.trials(trial.code, record.session = F, expand.grid(t1type = c('mushrooms', 'flowers'), t1pos = c(3, 6, 8),
-    t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)), condition = 'default')
+    t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)), condition = 'default', nof.trials = 8)
+
+gui.show.instruction("Teraz rozpocznie się zadanie w wersji właściwej. Ten etap potrwa dłużej.")
+
+run.trials(trial.code, record.session = F, condition = 'default',
+           expand.grid(t1type = c('mushrooms', 'flowers'), t1pos = c(3, 6, 8),
+                       t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)),
+           b = 2) ## 76 warunków
 
 if(!interactive())quit("no")
