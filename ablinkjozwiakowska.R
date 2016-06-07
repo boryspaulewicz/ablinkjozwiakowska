@@ -196,7 +196,7 @@ run.trials(trial.code, record.session = F, expand.grid(t1type = c('mushrooms', '
 
 gui.show.instruction("Teraz rozpocznie się zadanie w wersji właściwej. Ten etap potrwa dłużej.")
 
-run.trials(trial.code, record.session = F, condition = 'default',
+run.trials(trial.code, record.session = T, condition = 'default',
            expand.grid(t1type = c('mushrooms', 'flowers'), t1pos = c(3, 6, 8),
                        t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)),
            b = 2) ## 76 warunków
