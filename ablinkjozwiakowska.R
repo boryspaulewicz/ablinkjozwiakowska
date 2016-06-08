@@ -201,4 +201,6 @@ run.trials(trial.code, record.session = T, condition = 'default',
                        t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)),
            b = 2) ## 76 warunków
 
+gui.show.instruction("Dziękujemy za udział w badaniu. Proszę poczekać na swoim miejscu, aż osoba prowadząca badanie podejdzie i poinformuje o dalszym postępowaniu.")
+
 if(!interactive())quit("no")
