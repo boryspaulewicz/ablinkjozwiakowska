@@ -199,7 +199,7 @@ gui.show.instruction("Teraz rozpocznie się zadanie w wersji właściwej. Ten et
 run.trials(trial.code, record.session = T, condition = 'default',
            expand.grid(t1type = c('mushrooms', 'flowers'), t1pos = c(3, 6, 8),
                        t2type = c('neutral', 'happy', 'fearful'), t2lag = c(1, 3, 5, 7)),
-           b = 2) ## 76 warunków
+           b = 1) ## 76 warunków
 
 gui.show.instruction("Dziękujemy za udział w badaniu. Proszę poczekać na swoim miejscu, aż osoba prowadząca badanie podejdzie i poinformuje o dalszym postępowaniu.")
 
